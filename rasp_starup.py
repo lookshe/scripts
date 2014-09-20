@@ -24,7 +24,7 @@ def playerThreadFunc():
    # kill if running
    if process != 0:
       if process.poll() == None:
-         process.kill()
+         process.terminate()
          time.sleep(1)
    # turn on led
    GPIO.output(led_pin, True)
