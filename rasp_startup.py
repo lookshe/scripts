@@ -25,6 +25,7 @@ def playerThreadFunc():
    if process != 0:
       if process.poll() == None:
          process.terminate()
+         subprocess.call(['killall', cmd_player], shell=True)
          time.sleep(1)
    # turn on led
    GPIO.output(led_pin, True)
