@@ -1,0 +1,53 @@
+[general]
+osmosis_executable=/home/osm/convert/tools/osmosis-0.40.1/bin/osmosis
+download_and_convert_script=/home/osm/convert/scripts/download_and_convert.sh
+
+dir_maps=/home/osm/convert/maps
+dir_output=/home/osm/convert/output
+dir_stage=/home/osm/convert/stage
+dir_poly=/home/osm/convert/poly
+
+default_type=hd
+default_start_zoom=14
+default_language=en
+default_use_poly=true
+filetype_osm=osm.pbf
+filetype_map=map
+filetype_poly=poly
+
+threads_to_start=2
+
+download_base_url=http://download.geofabrik.de
+wget_limit_rate=20m
+
+maps_to_generate="germany berlin hamburg"
+[/general]
+
+[possible_values]
+download_map_path=relative path to map-file to downloaded
+download_map_file=filename of the map-file to download
+download_poly_path=relativ path to poly-file to download
+download_poly_file=filename of poly-file to download
+use_poly=override $default_use_poly
+type=overwrite $default_type (hd|ram)
+start_zoom=overwrite $default_start_zoom
+language=override $default_language
+[/possible_values]
+
+[germany]
+download_map_path=europe
+download_map_file=germany-latest
+download_poly_path=europe
+download_poly_file=germany
+use_poly=false
+[/germany]
+
+[berlin]
+download_poly_path=europe/germany
+download_poly_file=berlin
+[/berlin]
+
+[hamburg]
+download_poly_path=europe/germany
+download_poly_file=hamburg
+[/hamburg]
