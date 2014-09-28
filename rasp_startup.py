@@ -15,8 +15,10 @@ cmd_amixer1 = 'amixer -c 0 set PCM 98%'
 cmd_amixer2 = 'amixer -c 0 set Speaker 98%'
 
 # the process we want to start and its argument
-cmd_player = 'mplayer'
-arg_player = ['-cache', '8192', '-cache-min', '2', 'http://192.168.1.33:8000/mpd.ogg']
+#cmd_player = 'mplayer'
+cmd_player = 'ogg123'
+arg_player = []
+url_player = 'http://192.168.1.33:8000/mpd.ogg'
 process = 0
 
 def playerThreadFunc():
@@ -24,19 +26,24 @@ def playerThreadFunc():
    global process
    # kill if running
    if process != 0:
-      if process.poll() == None:
-         process.communicate(input='q')
+      #if process.poll() == None:
+         #process.communicate(input='q')
          if process.poll() == None:
             process.terminate()
-            subprocess.call(['killall', cmd_player], shell=True)
+            list_cmdarg = []
+            list_cmdarg.append('killall')
+            list_cmdarg.append(cmd_player)
+            subprocess.call(list_cmdarg, shell=False)
          time.sleep(1)
    # turn on led
    GPIO.output(led_pin, True)
    list_cmdarg = []
    list_cmdarg.append(cmd_player)
    list_cmdarg.extend(arg_player)
+   list_cmdarg.append(url_player)
    # start process and wait for termination
-   process = subprocess.Popen(list_cmdarg, stdin=PIPE)
+   process = subprocess.Popen(list_cmdarg)
+   #process = subprocess.Popen(list_cmdarg, stdin=PIPE)
    process.wait()
    # turn off led
    GPIO.output(led_pin, False)
