@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import time
 import thread
 import subprocess
+from subprocess import Popen, PIPE, STDOUT
 
 # pin-setup
 GPIO.setmode(GPIO.BOARD)
@@ -15,7 +16,7 @@ cmd_amixer2 = 'amixer -c 0 set Speaker 98%'
 
 # the process we want to start and its argument
 cmd_player = 'mplayer'
-arg_player = 'http://192.168.1.33:8000/mpd.ogg'
+arg_player = ['-cache', '8192', '-cache-min', '2', 'http://192.168.1.33:8000/mpd.ogg']
 process = 0
 
 def playerThreadFunc():
@@ -24,13 +25,18 @@ def playerThreadFunc():
    # kill if running
    if process != 0:
       if process.poll() == None:
-         process.terminate()
-         subprocess.call(['killall', cmd_player], shell=True)
+         process.communicate(input='q')
+         if process.poll() == None:
+            process.terminate()
+            subprocess.call(['killall', cmd_player], shell=True)
          time.sleep(1)
    # turn on led
    GPIO.output(led_pin, True)
+   list_cmdarg = []
+   list_cmdarg.append(cmd_player)
+   list_cmdarg.extend(arg_player)
    # start process and wait for termination
-   process = subprocess.Popen([cmd_player, arg_player])
+   process = subprocess.Popen(list_cmdarg, stdin=PIPE)
    process.wait()
    # turn off led
    GPIO.output(led_pin, False)
