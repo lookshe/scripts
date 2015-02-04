@@ -26,15 +26,19 @@ if(defined($ARGV[0])) {
     print "yes\n";
     exit(0);
   } elsif ($ARGV[0] eq 'config') {
-    print "graph_title $server access vhost\n";
-    print "graph_total Total\n";
-    print "graph_vlabel Access by \${graph_period}\n";
+    print "graph_title $server accesses vhost\n";
+#    print "graph_total Total\n";
+    print "graph_vlabel accesses / \${graph_period}\n";
     print "graph_category $server\n";
+    print "graph_args --base 1000\n";
     print "graph_info This graph show $server access by vhost.\n";
+    my $draw = "AREA";
     foreach my $vhostid (keys $logs) {
       print $vhostid.".label $logs->{$vhostid}{'label'}\n";
-      print $vhostid.".type DERIVE\n";
-      print $vhostid.".min 0\n";
+      print $vhostid.".draw $draw\n";
+      $draw = "STACK";
+#      print $vhostid.".type DERIVE\n";
+#      print $vhostid.".min 0\n";
     }
     exit(0);
   }
